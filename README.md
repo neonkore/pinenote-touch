@@ -19,10 +19,11 @@ The Pine64 PineNote touch panel and controller support up to ten finger input. H
 
 ## Outlook: modify configuration of vendor firmware
 There may be a way to enable ten finger touch input using the original firmware, e.g. by setting one of the undocumented `0x02` bytes to `0x0a` or `0x00`.
-** INCOMPLETE AND UNTESTED **
-- [ ] Create suitable version header `fw_vendor_version_header` (16 bytes). Contains firmware version information. I'm not sure what the last bytes are for or if they are even relevant. They are not included in the CRC.
-- [ ] Create configuration `cat fw_version_header_length fw_vendor_version_header param_regs.bin > config.bin`
+** UNTESTED **
+- [X] Create suitable version header `fw_vendor_version_header` (16 bytes). Contains firmware version information. I'm not sure what the last bytes are for or if they are even relevant. They are not included in the CRC.
+- [X] Create configuration `cat fw_version_header_length fw_vendor_version_header param_regs.bin > config.bin`
 - [ ] Upload configuration
+- [ ] When modifying, recompute the CRC (`boost::crc_ccitt_false_t`).
 
 ## Sensing configuration reported by vendor firmware with orignal configuration
 
