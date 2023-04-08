@@ -24,6 +24,9 @@ There may be a way to enable ten finger touch input using the original firmware,
 - [X] Create configuration `cat fw_version_header_length fw_vendor_version_header param_regs.bin > config.bin`
 - [ ] Upload configuration
 - [ ] When modifying, recompute the CRC (`boost::crc_ccitt_false_t`).
+- `config.bin`: hopefully flashable configuration file for the vendor `2.0.827952` firmware
+- `config_to00.bin`: undocumented `0x02` byte at `0x53` is set to `0x00`. Not tested
+- `config_to0a.bin`: undocumented `0x02` byte at `0x53` is set to `0x0a`. Not tested
 
 ## Sensing configuration reported by vendor firmware with orignal configuration
 
