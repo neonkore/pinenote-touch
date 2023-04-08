@@ -20,9 +20,9 @@ The Pine64 PineNote touch panel and controller support up to ten finger input. H
 ## Outlook: modify configuration of vendor firmware
 There may be a way to enable ten finger touch input using the original firmware, e.g. by setting one of the undocumented `0x02` bytes to `0x0a` or `0x00`.
 ** INCOMPLETE AND UNTESTED **
-- [ ] Create suitable version header `fw_vendor_version_header` (16 bytes). Contains firmware version information. I'm not sure what the last bytes are for or if they are even relevant.
-- [ ] Create configuration `cat fw_version_header_length fw_vendor_version_header param_regs.bin`
-- [ ] Upload configuration, fix CRC, upload configuration with fixed CRC.
+- [ ] Create suitable version header `fw_vendor_version_header` (16 bytes). Contains firmware version information. I'm not sure what the last bytes are for or if they are even relevant. They are not included in the CRC.
+- [ ] Create configuration `cat fw_version_header_length fw_vendor_version_header param_regs.bin > config.bin`
+- [ ] Upload configuration
 
 ## Sensing configuration reported by vendor firmware with orignal configuration
 
@@ -122,10 +122,10 @@ Work in progress: https://github.com/hrdl-github/linux/tree/cyttsp5_loader
 
 ## Configuration flashing
 
-- [ ] automatically compute CRC
+- [X] automatically compute CRC
 
 1. Optionally modify `Driver.h`
-2. Generate configuration: `g++ compile_config.cpp -o compile_config && ./compile_config > config.bin`
+2. Generate configuration: `g++ compile_config.cpp -o compile_config && ./compile_config config.bin`
 3. Write configuration
 
 ```
@@ -135,13 +135,13 @@ cat config.bin > /sys/bus/i2c/devices/5-0024/config_data
 echo 0 > /sys/bus/i2c/devices/5-0024/config_loading
 ```
 
-When modifying `Driver.h` the CRC should fail (e.g. `cyttsp5_upgrade_ttconfig: CRC PASS, ebid=0, status=0, scrc=7EA6 ccrc=7EA6`). Update `CONFIG_CRC` using the value from `scrc` (convert to little endian), recompile the firmware, and reupload. This should result in something like `cyttsp5_upgrade_ttconfig: CRC PASS, ebid=0, status=0, scrc=7EA6 ccrc=7EA6`.
+When modifying `Driver.h`, recompiling should recompute the CRC field. Verifying the configuration after upload should succeed (e.g. `cyttsp5_upgrade_ttconfig: CRC PASS, ebid=0, status=0, scrc=7EA6 ccrc=7EA6`).
 
 # Original configuration
 `vendor/annotated_dump` was an attempt to structure `vendor/param_regs.bin` based on `vendor/param_sizes.bin` while comparing it to the original 2.0.724515 `Driver.h`. `vendor/param_regs.bin` and `vendor/param_sizes.bin` were extracted from the vendor kernel image.
 
 ```
-version_length=10
+crc_length=2
 
 sudo cat /dev/disk/by-partlabel/boot > boot.img
 unpack_bootimg --boot_img boot.img --out .
@@ -149,7 +149,7 @@ sudo rm dtb ramdisk second boot.img
 regs_addr=$((0x$(bgrep '18 33 72 51' kernel |cut -d: -f1 |head -n 1)-14))
 sizes_addr=$(bgrep '02 00 02 00 04 00 02 00  01 00 01 00 01 00 01 00' kernel |cut -d: -f1 |head -n1)
 regs_length=$(od -j "${regs_addr}" -N 2 kernel -d |head -n 1 |awk '{print $2}')
-dd if=kernel of=param_regs.bin skip="${regs_addr}" ibs=1 count=$((regs_length+version_length))
+dd if=kernel of=param_regs.bin skip="${regs_addr}" ibs=1 count=$((regs_length+crc_length))
 dd if=kernel of=param_sizes.bin skip="$((0x${sizes_addr}))" ibs=1 count=990
 ```
 
