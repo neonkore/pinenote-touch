@@ -126,20 +126,20 @@ Work in progress: https://github.com/hrdl-github/linux/tree/cyttsp5_loader
 
 ## Configuration flashing
 
-- [X] automatically compute CRC
-
 1. Optionally modify `Driver.h`
 2. Generate configuration: `g++ compile_config.cpp -o compile_config && ./compile_config config.bin`
 3. Write configuration
 
 ```
-sudo modprobe cyttsp5_loader
+sudo modprobe cyttsp5 cyttsp5_loader cyttsp5_i2c
 echo 1 > /sys/bus/i2c/devices/5-0024/config_loading
 cat config.bin > /sys/bus/i2c/devices/5-0024/config_data
 echo 0 > /sys/bus/i2c/devices/5-0024/config_loading
 ```
 
-When modifying `Driver.h`, recompiling should recompute the CRC field. Verifying the configuration after upload should succeed (e.g. `cyttsp5_upgrade_ttconfig: CRC PASS, ebid=0, status=0, scrc=7EA6 ccrc=7EA6`).
+When modifying `Driver.h`, recompiling should recompute the CRC field. When directly modifying the binary configuration file `vendor/update_crc.py` can be used to update the CRC and perform basic length checks. Verifying the configuration after upload should succeed (e.g. `cyttsp5_upgrade_ttconfig: CRC PASS, ebid=0, status=0, scrc=7EA6 ccrc=7EA6`).
+
+To verify multi-touch support, run `sudo evtest |grep ABS_MT_SLOT` and keep track of the highest value. Alternatively inspect the sensing configuration data reported by the vendor driver, e.g. via `dmesg |grep max_num_of_tch_per_refresh_cycle` or `journalctl -b0 -g max_num_of_tch_per_refresh_cycle`.
 
 # Original configuration
 `vendor/annotated_dump` was an attempt to structure `vendor/param_regs.bin` based on `vendor/param_sizes.bin` while comparing it to the original 2.0.724515 `Driver.h`. `vendor/param_regs.bin` and `vendor/param_sizes.bin` were extracted from the vendor kernel image.
