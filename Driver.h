@@ -713,8 +713,8 @@ static const uint8_t cyttsp4_param_regs[] = {
 	0x00, 0x00, 0x00, 0x00, 
 	0x00,  /* Reserved1747 */
 	// S22.4 Relevant for palm detection. Why is TOUCH_TRACKING_FEATURES 0?
-	0x00,  /* TOUCH_TRACKING_FEATURES */
-	0x00,  /* SIZE_ORIENTATION_ENABLE */
+	0x03,  /* TOUCH_TRACKING_FEATURES */
+	0x03,  /* SIZE_ORIENTATION_ENABLE */
 	0x03,  /* MIN_FAT_FINGER_SIZE */
 	0x00,  /* MIN_FAT_FINGER_SIZE_HYST */
 	0x05,  /* MAX_FAT_FINGER_SIZE */
