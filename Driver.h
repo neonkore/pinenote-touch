@@ -712,13 +712,13 @@ static const uint8_t cyttsp4_param_regs[] = {
 	0x00,  /* TOUCHMODE_GLOVE_TOUCH_AS_FINGER_ENABLE */
 	0x00, 0x00, 0x00, 0x00, 
 	0x00,  /* Reserved1747 */
-	// S22.4 TODO I haven't changed these yet
-	0x03,  /* TOUCH_TRACKING_FEATURES */
-	0x03,  /* SIZE_ORIENTATION_ENABLE */
-	0x0A,  /* MIN_FAT_FINGER_SIZE */
-	0x03,  /* MIN_FAT_FINGER_SIZE_HYST */
-	0x23,  /* MAX_FAT_FINGER_SIZE */
-	0x05,  /* MAX_FAT_FINGER_SIZE_HYST */
+	// S22.4 Relevant for palm detection. Why is TOUCH_TRACKING_FEATURES 0?
+	0x00,  /* TOUCH_TRACKING_FEATURES */
+	0x00,  /* SIZE_ORIENTATION_ENABLE */
+	0x03,  /* MIN_FAT_FINGER_SIZE */
+	0x00,  /* MIN_FAT_FINGER_SIZE_HYST */
+	0x05,  /* MAX_FAT_FINGER_SIZE */
+	0x01,  /* MAX_FAT_FINGER_SIZE_HYST */
 	// S22.5 missing  0x0a, 0x00   , 0x05, 0x00
 	// S22.6
 	0x40,  /* SIGNAL_THRESHOLD_MULTIPLIER */
