@@ -71,7 +71,7 @@ cyttsp5_si_put_log_data: xy_data =00000000cc26aec8
 ```
 
 ## Sensing configuration obtained with 2.0.724515 firmware and modified configuration
-Differences: `revctrl`, `max_num_of_tch_per_refresh_cycle` as well as `xy_mode` and `xy_data`. I don't know what the latter do.
+Differences: `revctrl`, `max_num_of_tch_per_refresh_cycle`, `panel_id`, as well as `xy_mode` and `xy_data`. I don't know what the latter do.
 
 ```
 cyttsp5_pr_buf:  sysinfo_cydata[0..27]=01 02 0A 00 02 00 23 0E 0B 00 0D 00 02 00 9C 13 13 0C C0 CB 49 0C 6F 10 05 00 1E 03
